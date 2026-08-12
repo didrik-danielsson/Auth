@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+
+  postgres:
+    image: postgres:13.4-alpine
+    container_name: dev_postgres
+    ports:
+      - 5432:5432
+    env_file:
+      - secrets
+    environment:
+      POSTGRES_USER: didrik
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
