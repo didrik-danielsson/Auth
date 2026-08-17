@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.util.Date;
 import java.util.function.Function;
 
 @Service
@@ -48,7 +49,15 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUserName(token);
-        return (username != null && username.equals(userDetails.getUsername()));
+        return (username != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+    private boolean isTokenExpired(String token) {
+        Date expirationDate = extractExpirationDate(token);
+        return expirationDate!= null && expirationDate.before(new Date());
+    }
+
+    private Date extractExpirationDate(String token) {
+        return extractClaim(token, Claims::getExpiration);
     }
 }
 
