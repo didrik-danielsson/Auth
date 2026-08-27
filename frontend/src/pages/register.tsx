@@ -1,10 +1,11 @@
 import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle} from "@fortawesome/free-solid-svg-icons"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-import axios from './api/axios';
+import axios from '../api/axios';
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&]).{8,24}$/;
+const REGISTER_URL = "/register";
 
 const Register = () => {
 
@@ -61,8 +62,31 @@ const Register = () => {
             setErr("Invalid username or password");
             return;
         }
-        console.log("Submitting");
+       try {
+        const response = await axios.post(REGISTER_URL,
+            JSON.stringify({email: user + "@outlook.com", fullName: user, password: pwd}),
+            {
+                headers: {'Content-Type': 'application/json'},
+                withCredentials: true
+            });
+        console.log(response);
+        console.log(response.token);
+        console.log(JSON.stringify(response));
         setSuccess(true);
+        //Clears the form
+        setUser('');
+        setPwd('');
+        setMatchPwd('');
+       } catch (err) {
+            if(!err.response) {
+                setErr("Server error");
+            } else if(err.response?.status === 409) {
+                setErr("Username already exists");
+            } else {
+                setErr("Registration failed");
+            }
+            errRef.current.focus();
+       }
     }
 
     return (
