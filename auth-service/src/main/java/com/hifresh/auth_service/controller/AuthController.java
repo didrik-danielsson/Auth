@@ -28,9 +28,14 @@ public class AuthController {
 
     @Operation(summary = "Register a new user")
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDTO request) {
+    public ResponseEntity<UserDTO> register(@RequestBody RegisterUserDTO request) {
         User registeredUser = authenticationService.registerUser(request);
-        return ResponseEntity.ok(registeredUser);
+        UserDTO newUser = UserDTO.builder()
+                .email(registeredUser.getEmail())
+                .fullName(registeredUser.getFullName())
+                .userName(registeredUser.getUsername())
+                .build();
+        return ResponseEntity.ok(newUser);
     }
     @Operation(summary = "Login a user")
     @PostMapping("/login")
@@ -53,7 +58,7 @@ public class AuthController {
 
         return ResponseEntity.ok(loginResponse);
     }
-
+    @Operation(summary = "Get the user-profile")
     @GetMapping("/profile")
     public ResponseEntity<UserDTO> authenticatedUser() {
 

@@ -1,5 +1,6 @@
 package com.hifresh.auth_service.controller;
 
+import com.hifresh.auth_service.models.dtos.UserDTO;
 import com.hifresh.auth_service.models.enitities.User;
 import com.hifresh.auth_service.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,19 +25,19 @@ public class UserController {
 
     @Operation(summary = "Get the current user")
     @GetMapping("/me")
-    public ResponseEntity<User> authenticatedUser() {
+    public ResponseEntity<UserDTO> authenticatedUser() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        assert authentication != null;
         User currentUser = (User) authentication.getPrincipal();
 
-        return ResponseEntity.ok(currentUser);
+        return ResponseEntity.ok(currentUser.toDto());
     }
     @Operation(summary = "Get all users")
     @GetMapping("/")
-    public ResponseEntity<List<User>> allUsers() {
-        List<User> users = userService.allUsers();
-
+    public ResponseEntity<List<UserDTO>> allUsers() {
+        List<UserDTO> users = userService.allUsers().stream().map(User::toDto).toList();
         return ResponseEntity.ok(users);
     }
 }

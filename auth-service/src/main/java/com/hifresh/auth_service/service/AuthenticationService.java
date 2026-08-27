@@ -23,7 +23,7 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
+//TODO: Validate password before registering account
     public User registerUser(RegisterUserDTO input) {
         User user = User.builder()
                 .fullName(input.getFullName())

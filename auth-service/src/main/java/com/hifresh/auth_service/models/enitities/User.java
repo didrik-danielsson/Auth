@@ -1,5 +1,6 @@
 package com.hifresh.auth_service.models.enitities;
 
+import com.hifresh.auth_service.models.dtos.UserDTO;
 import jakarta.persistence.*;
 import jdk.jfr.Timespan;
 import jdk.jfr.Timestamp;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.domain.Auditable;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,7 +43,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @UpdateTimestamp
+    @CreationTimestamp
     @Column(updatable = false, name="created_at")
     private Date createdAt;
 
@@ -73,5 +75,13 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public UserDTO toDto() {
+        return UserDTO.builder()
+                .email(email)
+                .fullName(fullName)
+                .userName(userName)
+                .build();
     }
 }

@@ -27,10 +27,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(HandlerExceptionResolver handlerExceptionResolver, UserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter(HandlerExceptionResolver handlerExceptionResolver, UserDetailsService userDetailsService, JwtService jwtService) {
         this.handlerExceptionResolver = handlerExceptionResolver;
         this.userDetailsService = userDetailsService;
-        this.jwtService = new JwtService();
+        this.jwtService = jwtService;
     }
     @Override
     protected void doFilterInternal(
